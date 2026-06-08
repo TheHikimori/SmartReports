@@ -1,0 +1,5 @@
+name: SmartReportsPlugin
+version: '1.0-SNAPSHOT'
+main: me.azuredev.smartReportsPlugin.SmartReportsPlugin
+api-version: '1.21'
+authors: [ ph4ntom ]
