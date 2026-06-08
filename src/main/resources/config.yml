@@ -1,0 +1,30 @@
+database:
+
+  type: SQLITE
+
+  mysql:
+
+    host: localhost
+    port: 3306
+    database: smartreports
+    username: root
+    password: password
+
+telegram:
+  enabled: true
+
+  bot-token: "PASTE_TOKEN_HERE"
+
+  chat-id: "-1001234567890"
+
+  send-new-ticket: true
+
+notifications:
+
+  actionbar: true
+  bossbar: true
+  title: true
+
+cache:
+
+  enabled: true

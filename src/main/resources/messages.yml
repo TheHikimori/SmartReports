@@ -1,0 +1,18 @@
+prefix: "&6SmartReports &8»"
+
+no-permission: "&cНедостаточно прав."
+
+report-created: "&aРепорт успешно создан."
+report-not-found: "&cРепорт не найден."
+
+report:
+
+  created: "&aРепорт создан. ID: &e%id%"
+  self-report: "&cНельзя репортить самого себя."
+  player-not-found: "&cИгрок не найден."
+  cooldown: "&cПодождите %time% сек."
+  limit: "&cВы достигли лимита репортов."
+
+staff:
+
+  notification: "&c⚠ Новый репорт #%id% от %player%"

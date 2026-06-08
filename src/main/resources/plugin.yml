@@ -1,5 +1,76 @@
-name: SmartReportsPlugin
-version: '1.0-SNAPSHOT'
-main: me.azuredev.smartReportsPlugin.SmartReportsPlugin
+name: SmartReports
+
+version: '${project.version}'
+
+main: me.azuredev.smartreports.SmartReportsPlugin
+
 api-version: '1.21'
-authors: [ ph4ntom ]
+
+author: AzureDev
+
+softdepend:
+  - PlaceholderAPI
+
+commands:
+
+  report:
+    description: Кинуть Репорт
+    aliases:
+      - r
+      - репорт
+
+  myreports:
+    description: Мои репорты
+    aliases:
+      - моирепорты
+      - myreport
+
+  reports:
+    description: Стафф репорт панель
+    aliases:
+      - reportpanel
+      - репорт-панель
+
+  smartreports:
+    description: Основная команда
+    aliases:
+      - sr
+
+  ticket:
+    description: Управление тикетами
+    aliases:
+      - t
+      - тикет
+
+  tickethistory:
+    description: История репортов
+    aliases:
+      - th
+      - history
+      - репорт-история
+
+permissions:
+
+  smartreports.use:
+    default: true
+
+  smartreports.staff:
+    default: op
+
+  smartreports.admin:
+    default: op
+
+  smartreports.ticket.claim:
+    default: op
+
+  smartreports.ticket.resolve:
+    default: op
+
+  smartreports.ticket.close:
+    default: op
+
+  smartreports.ticket.comment:
+    default: op
+
+  smartreports.ticket.history:
+    default: op

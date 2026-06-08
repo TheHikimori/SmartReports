@@ -1,0 +1,10 @@
+enabled: false
+
+bot-token: ""
+
+chat-id: ""
+
+message-format:
+
+  new-ticket:
+    - "📢 Новый репорт"
