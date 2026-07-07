@@ -39,15 +39,13 @@ public class ManagerRegistry {
                         databaseManager
                 );
 
+        ticketManager =
+                new TicketManager(repository);
+
         historyManager =
                 new HistoryManager(
                         historyRepository
                 );
-
-        telegramManager =
-                new TelegramManager(plugin);
-
-        telegramManager.initialize();
 
         antiSpamManager =
                 new AntiSpamManager();
@@ -55,8 +53,8 @@ public class ManagerRegistry {
         staffNotifier =
                 new StaffNotifier();
 
-        ticketManager =
-                new TicketManager(repository);
+        telegramManager =
+                new TelegramManager(plugin);
     }
 
     public void shutdown() {

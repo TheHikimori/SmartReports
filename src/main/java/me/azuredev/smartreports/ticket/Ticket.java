@@ -33,6 +33,11 @@ public class Ticket {
         this.id = id;
     }
 
+    // ИСПРАВЛЕННЫЙ МЕТОД: возвращает reportedPlayer
+    public UUID getTarget() {
+        return reportedPlayer;
+    }
+
     public UUID getReporter() {
         return reporter;
     }

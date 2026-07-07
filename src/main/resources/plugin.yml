@@ -36,6 +36,13 @@ commands:
     aliases:
       - sr
 
+  testreport:
+    description: Create test report
+    aliases:
+      - tr
+      - тест-репорт
+    permission: smartreports.admin
+
   ticket:
     description: Управление тикетами
     aliases:
@@ -74,3 +81,6 @@ permissions:
 
   smartreports.ticket.history:
     default: op
+
+    smartreports.test:
+      default: op

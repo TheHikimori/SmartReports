@@ -17,6 +17,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class SmartReportsBot
         extends TelegramLongPollingBot {
@@ -103,48 +104,46 @@ public class SmartReportsBot
                     switch (action) {
 
                         case "claim" -> {
+                            if (ticket.getAssignedStaff() != null) {
+                                sendAlert(query.getId(), "❌ Этот тикет уже занят другим сотрудником!");
+                                return;
+                            }
 
-                            ticket.setStatus(
-                                    TicketStatus.CLAIMED
-                            );
-
-                            ticketManager.updateTicket(
-                                    ticket
-                            );
+                            ticket.setStatus(TicketStatus.CLAIMED);
+                            // Записываем ID того, кто взял
+                            ticket.setAssignedStaff(UUID.nameUUIDFromBytes(userName.getBytes()));
+                            ticketManager.updateTicket(ticket);
 
                             statusText = "\n\n🟡 Тикет #" + ticketId + " взят (@" + userName + ")";
                             assignee = "\nИсполнитель: @" + userName;
                         }
 
-                        case "resolve" -> {
+                        case "resolve", "close" -> {
+                            // Создаем UUID текущего пользователя для проверки
+                            UUID currentUserUuid = UUID.nameUUIDFromBytes(userName.getBytes());
 
-                            ticket.setStatus(
-                                    TicketStatus.RESOLVED
-                            );
+                            // 1. Защита: Если тикет вообще не взят, кнопки не работают
+                            if (ticket.getAssignedStaff() == null) {
+                                sendAlert(query.getId(), "❌ Сначала нужно взять тикет!");
+                                return;
+                            }
 
-                            ticketManager.updateTicket(
-                                    ticket
-                            );
+                            // 2. Защита: Если ID того, кто нажал, НЕ совпадает с тем, кто взял - блокируем
+                            if (!ticket.getAssignedStaff().equals(currentUserUuid)) {
+                                sendAlert(query.getId(), "❌ Этот тикет взял другой сотрудник!");
+                                return;
+                            }
 
-                            statusText = "\n\n🟢 Тикет #" + ticketId + " решён (@" + userName + ")";
+                            // Логика действий
+                            if (action.equals("resolve")) {
+                                ticket.setStatus(TicketStatus.RESOLVED);
+                                statusText = "\n\n🟢 Тикет #" + ticketId + " решён (@" + userName + ")";
+                            } else {
+                                ticket.setStatus(TicketStatus.CLOSED);
+                                statusText = "\n\n🔴 Тикет #" + ticketId + " закрыт (@" + userName + ")";
+                            }
+                            ticketManager.updateTicket(ticket);
                         }
-
-                        case "close" -> {
-
-                            ticket.setStatus(
-                                    TicketStatus.CLOSED
-                            );
-
-                            ticketManager.updateTicket(
-                                    ticket
-                            );
-
-                            statusText = "\n\n🔴 Тикет #" + ticketId + " закрыт (@" + userName + ")";
-                        }
-                    }
-
-                    if (statusText.isEmpty()) {
-                        return;
                     }
 
                     try {
@@ -223,6 +222,7 @@ public class SmartReportsBot
                     ID: %s
                     Репортёр: %s
                     Нарушитель: %s
+                    Работать будет: Драйф1
                     
                     Причина:
                     %s
@@ -280,6 +280,60 @@ public class SmartReportsBot
 
             execute(message);
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendComment(
+            long ticketId,
+            String author,
+            String comment
+    ) {
+
+        try {
+
+            SendMessage message =
+                    new SendMessage();
+
+            message.setChatId(
+                    plugin.getConfig()
+                            .getString(
+                                    "telegram.chat-id"
+                            )
+            );
+
+            message.setText(
+                    """
+                    💬 Новый комментарий
+                    
+                    Тикет: #%s
+                    Автор: %s
+                    
+                    Комментарий:
+                    %s
+                    """
+                            .formatted(
+                                    ticketId,
+                                    author,
+                                    comment
+                            )
+            );
+
+            execute(message);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void sendAlert(String callbackQueryId, String text) {
+        try {
+            AnswerCallbackQuery alert = new AnswerCallbackQuery();
+            alert.setCallbackQueryId(callbackQueryId);
+            alert.setText(text);
+            alert.setShowAlert(true);
+            execute(alert);
         } catch (Exception e) {
             e.printStackTrace();
         }
